@@ -1,4 +1,4 @@
-<div class="forum-container"> 
+<div class="forum-container">
 
   <!-- Button to open the post creation form -->
   <div class="create-post-button">
@@ -48,9 +48,11 @@
     </button>
 
     <!-- Comments section -->
-    <div *ngIf="post.showComments" class="comments-section">
-      <!-- <app-comments [postId]="post.id"></app-comments> -->
+    @if (post.showComments){
+    <div class="comments-section">
+      <app-comments [postId]="post.id"></app-comments>
     </div>
+    }
   </div>
   }
 </div>

@@ -23,11 +23,14 @@ import {
   Undo
 } from 'ckeditor5';
 import 'ckeditor5/ckeditor5.css';
+import { CommentsComponent } from '../comments/comments.component';
+import { Post } from '../../models/post';
 
 @Component({
   selector: 'app-forum',
   standalone: true,
   imports: [
+    CommentsComponent,
     CKEditorModule,
     ReactiveFormsModule,
     HttpClientModule,
@@ -39,7 +42,7 @@ import 'ckeditor5/ckeditor5.css';
   styleUrl: './forum.component.scss'
 })
 export class ForumComponent implements OnInit {
-  posts: any[] = [];
+  posts: Post[] = [];
   postForm: FormGroup;  
   showPostForm = false;
   public Editor = ClassicEditor;
@@ -87,7 +90,12 @@ export class ForumComponent implements OnInit {
 
   createPost() {
     if (this.postForm.valid) {
-      const newPost = this.postForm.value;
+      const newPost: Post = {
+        id: 0,  
+        title: this.postForm.value.title,
+        content: this.postForm.value.content,
+        comments: []
+      };
       // this.postService.createPost(newPost).subscribe(post => {
         this.posts.push(newPost);
         this.postForm.reset();
