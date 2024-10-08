@@ -1,0 +1,19 @@
+<div class="comments-container">
+    <h4>Comments</h4>
+
+    @for (comment of comments; track comment){
+    <p class="comment">{{ comment.content }}</p>
+    }
+
+    <form [formGroup]="commentForm" (ngSubmit)="addComment()">
+        <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Add Comment</mat-label>
+            <textarea matInput formControlName="content" placeholder="Enter comment"></textarea>
+            @if (commentForm.get('content')?.hasError('required')){
+                <mat-error>Comment is required</mat-error>
+            }
+        </mat-form-field>
+
+        <button mat-raised-button color="primary" type="submit" [disabled]="commentForm.invalid">Add Comment</button>
+    </form>
+</div>
