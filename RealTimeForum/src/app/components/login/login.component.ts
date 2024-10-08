@@ -9,6 +9,7 @@ import { MatError } from '@angular/material/form-field';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { HttpClientModule } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
+import { Login } from '../../models/login';
 
 @Component({
   selector: 'app-login',
@@ -44,10 +45,13 @@ export class LoginComponent {
 
   onSubmit() {
     if (this.loginForm.valid) {
-      const { username, password } = this.loginForm.value;
+      const loginData: Login = {
+        username: this.loginForm.get('username')?.value,
+        password: this.loginForm.get('password')?.value
+      };
       this.isLoading = true;
 
-      this.authService.login(username, password).subscribe(
+      this.authService.login(loginData).subscribe(
         success => {
           this.isLoading = false;
           if (success) {
