@@ -1,0 +1,61 @@
+@import '../../../styles.scss';
+
+.forum-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem;
+  
+  .button-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 1rem;       
+  }
+
+  .create-post-button {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2rem;   
+  }
+
+  .post-form {
+    margin-bottom: 2rem;
+
+    form {
+      display: flex;
+      flex-direction: column;
+    
+      ckeditor {
+        margin-bottom: 1.5rem;
+        height: 300px;
+      }
+    }
+  }
+
+  .post {
+    background-color: $primary-light-color;
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+    .post-header {
+      h3 {
+        margin: 0;
+        font-size: 1.5rem;
+        color: $primary-dark-color;
+      }
+    }
+
+    .post-content {
+      margin-top: 1rem;
+      font-size: 1.1rem;     
+    }
+ 
+    .comments-section {
+      margin-top: 1rem;
+      padding: 0.5rem;
+      background-color: $background-color;
+      border-radius: 5px;
+    }
+  }
+}

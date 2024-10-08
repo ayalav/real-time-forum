@@ -1,0 +1,56 @@
+<div class="forum-container"> 
+
+  <!-- Button to open the post creation form -->
+  <div class="create-post-button">
+    @if (!showPostForm){
+    <button mat-raised-button color="primary" (click)="togglePostForm()">
+      Create New Post
+    </button>
+    }
+  </div>
+
+  <!-- Form to create a new post, shown only when the user clicks the button -->
+  @if (showPostForm){
+  <form [formGroup]="postForm" class="post-form" (ngSubmit)="createPost()">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Post Title</mat-label>
+      <input matInput formControlName="title" placeholder="Enter post title" />
+      @if (postForm.get('title')?.hasError('required')){
+      <mat-error>Title is required</mat-error>
+      }
+    </mat-form-field>
+
+    <ckeditor [editor]="Editor" [config]="config" formControlName="content"></ckeditor>
+
+    <!-- Button containers -->
+    <div class="button-container">
+      <button mat-raised-button color="primary" type="submit" [disabled]="postForm.invalid">
+        Submit Post
+      </button>
+      <button mat-button color="warn" (click)="togglePostForm()">
+        Cancel
+      </button>
+    </div>
+  </form>
+  }
+
+  <!-- Display list of posts -->
+  @for (post of posts; track post){
+  <div class="post">
+    <div class="post-header">
+      <h3>{{ post.title }}</h3>
+    </div>
+    <div class="post-content" [innerHTML]="post.content"></div>
+
+    <!-- Button to toggle showing comments -->
+    <button mat-button color="primary" (click)="toggleComments(post)">
+      {{ post.showComments ? 'Hide Comments' : 'Show Comments' }}
+    </button>
+
+    <!-- Comments section -->
+    <div *ngIf="post.showComments" class="comments-section">
+      <!-- <app-comments [postId]="post.id"></app-comments> -->
+    </div>
+  </div>
+  }
+</div>
