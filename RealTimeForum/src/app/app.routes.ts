@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { AuthGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
     {
@@ -16,7 +17,8 @@ export const routes: Routes = [
     },
     {
         path: 'forum',
-        loadComponent: () => import('./components/forum/forum.component').then(m => m.ForumComponent)
+        loadComponent: () => import('./components/forum/forum.component').then(m => m.ForumComponent),
+        canActivate: [AuthGuard] 
     },
     {
         path: '**',
