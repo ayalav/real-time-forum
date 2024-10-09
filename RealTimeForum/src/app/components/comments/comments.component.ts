@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { PostService } from '../../services/post.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatButtonModule } from '@angular/material/button';
 import { Comment } from '../../models/comment';
 
@@ -23,7 +24,7 @@ export class CommentsComponent {
   comments: Comment[] = [];
   commentForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private postService: PostService) {
+  constructor(private fb: FormBuilder, private postService: PostService, private snackBar: MatSnackBar) {
     this.commentForm = this.fb.group({
       content: ['', Validators.required]
     });
@@ -46,10 +47,16 @@ export class CommentsComponent {
         content: this.commentForm.value.content
       };
 
-      // this.postService.addComment(newComment).subscribe(comment => {
-        this.comments.push(newComment);  // הוספת התגובה לרשימה
-        this.commentForm.reset();
-      // });
+      this.postService.addComment(newComment).subscribe(
+        comment => {
+          this.comments.push(comment); 
+          this.commentForm.reset();
+          this.snackBar.open('Comment added successfully!', 'Close', { duration: 3000 }); 
+        },
+        error => {
+          this.snackBar.open('Failed to add comment. Please try again.', 'Close', { duration: 3000 }); 
+        }
+      );
     }
   }
 }

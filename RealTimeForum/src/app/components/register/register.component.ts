@@ -6,6 +6,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { HttpClientModule } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
 import { Register } from '../../models/register';
@@ -29,7 +30,7 @@ export class RegisterComponent {
   registerForm: FormGroup;
   isLoading = false;
 
-  constructor(private fb: FormBuilder, private router: Router, private authService: AuthService) {
+  constructor(private fb: FormBuilder, private router: Router, private authService: AuthService, private snackBar: MatSnackBar) {
     // Initialize form
     this.registerForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
@@ -40,9 +41,12 @@ export class RegisterComponent {
       validators: this.passwordMatchValidator  // Custom validator to check password match
     });
 
-    if (this.authService.isLoggedIn()) {
-      this.router.navigate(['/forum']);
-    }
+    // Check if user is already logged in, and redirect to the forum if true
+    this.authService.isLoggedIn$.subscribe(isLoggedIn => {
+      if (isLoggedIn) {
+        this.router.navigate(['/forum']);
+      }
+    });
   }
 
   // Custom validator to check if passwords match
@@ -60,19 +64,20 @@ export class RegisterComponent {
         password: this.registerForm.get('password')?.value
       };
       this.isLoading = true;
-
+  
       this.authService.register(registerData).subscribe(
         success => {
           this.isLoading = false;
           if (success) {
+            this.snackBar.open('Registration successful! Please log in.', 'Close', { duration: 3000 }); 
             this.router.navigate(['/login']);
           } else {
-            console.error('Registration failed');
+            this.snackBar.open('Registration failed. Please try again.', 'Close', { duration: 3000 }); 
           }
         },
         error => {
           this.isLoading = false;
-          console.error('Registration failed', error);
+          this.snackBar.open('Registration failed due to server error. Please try again.', 'Close', { duration: 3000 });  
         }
       );
     }
