@@ -1,10 +1,19 @@
+using Microsoft.EntityFrameworkCore;
 using RealTimeForum.Data;
 using RealTimeForum.Data.Entities;
 using RealTimeForum.Models;
 
 namespace RealTimeForum.Services;
 
-public class PostService
+public interface IPostService
+{
+    Task<List<Post>> GetAllPosts();
+    Task<Post> CreatePost(PostDTO post, int userId);
+    Task<List<Comment>> GetComments(int postId);
+    Task<Comment> AddComment(int postId, CommentDTO comment);
+}
+
+public class PostService : IPostService
 {
     private readonly MyDbContext _dbContext;
 
@@ -14,13 +23,13 @@ public class PostService
     }
 
     // Fetch all posts
-    public List<Post> GetAllPosts()
+    public async Task<List<Post>> GetAllPosts()
     {
-        return _dbContext.Posts.ToList();
+        return await _dbContext.Posts.ToListAsync();
     }
 
     // Create a new post
-    public Post CreatePost(PostDTO post, int userId)
+    public async Task<Post> CreatePost(PostDTO post, int userId)
     {
         var newPost = new Post()
         {
@@ -30,18 +39,18 @@ public class PostService
         };
 
         _dbContext.Posts.Add(newPost);
-        _dbContext.SaveChanges();
+        await _dbContext.SaveChangesAsync();
         return newPost;
     }
 
     // Fetch comments for a specific post
-    public List<Comment> GetComments(int postId)
+    public async Task<List<Comment>> GetComments(int postId)
     {
-        return _dbContext.Comments.Where(c => c.PostId == postId).ToList();
+        return await _dbContext.Comments.Where(c => c.PostId == postId).ToListAsync();
     }
 
     // Add a comment to a specific post
-    public Comment AddComment(int postId, CommentDTO comment)
+    public async Task<Comment> AddComment(int postId, CommentDTO comment)
     {
         var newComment = new Comment()
         {
@@ -50,7 +59,7 @@ public class PostService
         };
 
         _dbContext.Comments.Add(newComment);
-        _dbContext.SaveChanges();
+        await _dbContext.SaveChangesAsync();
         return newComment;
     }
 }

@@ -7,12 +7,17 @@ using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using RealTimeForum.Models.Enums;
 using RealTimeForum.Models;
-
-
+using Microsoft.EntityFrameworkCore;
 
 namespace RealTimeForum.Services;
 
-public class AuthService
+public interface IAuthService
+{
+    Task<LoginResult> Login(LoginDTO model);
+    Task<LoginRes> Register(RegisterDTO model);
+}
+
+public class AuthService : IAuthService
 {
     private readonly MyDbContext _dbContext;
     private readonly IConfiguration _configuration;
@@ -24,36 +29,32 @@ public class AuthService
     }
 
     // Login a user and verify the password
-    public string Login(LoginDTO model, ref LoginRes loginResult)
+    public async Task<LoginResult> Login(LoginDTO model)
+
     {
-        var user = _dbContext.Users.FirstOrDefault(u => u.UserName == model.Username);
+    var user = await _dbContext.Users.FirstOrDefaultAsync(u => u.UserName == model.Username);
 
-        if (user == null)
-        {
-            loginResult = LoginRes.UserNameIncorrect;
-            return null;
-        }
+    if (user == null)
+    {
+        return new LoginResult { Result = LoginRes.UserNameIncorrect };
+    }
 
-        // Verify the password using BCrypt
-        bool passwordMatch = BCrypt.Net.BCrypt.Verify(model.Password, user.Password);
+    bool passwordMatch = BCrypt.Net.BCrypt.Verify(model.Password, user.Password);
 
-        if (!passwordMatch)
-        {
-            loginResult = LoginRes.PasswordIncorrect;
-            return null;
-        }
+    if (!passwordMatch)
+    {
+        return new LoginResult { Result = LoginRes.PasswordIncorrect };
+    }
 
-        // Create JWT token
-        var token = GenerateJwtToken(user);
+    var token = GenerateJwtToken(user);
 
-        loginResult = LoginRes.Success;
-        return token;
+    return new LoginResult { Result = LoginRes.Success, Token = token };
     }
 
     // Register a new user and hash the password with BCrypt
-    public LoginRes Register(RegisterDTO model)
+    public async Task<LoginRes> Register(RegisterDTO model)
     {
-        if (_dbContext.Users.Any(u => u.UserName == model.Username))
+        if (await _dbContext.Users.AnyAsync(u => u.UserName == model.Username))
             return LoginRes.UserExist;
 
         string hashedPassword = BCrypt.Net.BCrypt.HashPassword(model.Password);
@@ -65,7 +66,7 @@ public class AuthService
         };
 
         _dbContext.Users.Add(newUser);
-        _dbContext.SaveChanges();
+        await _dbContext.SaveChangesAsync();
 
         return LoginRes.Success;
     }
@@ -77,7 +78,7 @@ public class AuthService
         {
         new Claim(JwtRegisteredClaimNames.Sub, user.UserName),
         new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-        new Claim("UserId", user.Id.ToString()) 
+        new Claim("UserId", user.Id.ToString())
     };
 
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));

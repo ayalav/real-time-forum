@@ -13,8 +13,8 @@ builder.Services.AddDbContext<MyDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 // Add services
-builder.Services.AddScoped<AuthService>();
-builder.Services.AddScoped<PostService>();
+builder.Services.AddScoped<IPostService, PostService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 // Add JWT Authentication
 builder.Services.AddAuthentication(options =>
