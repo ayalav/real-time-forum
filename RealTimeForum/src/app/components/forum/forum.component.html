@@ -38,14 +38,14 @@
   @for (post of posts; track post){
   <div class="post">
     <div class="post-header">
-      <h3>{{ post.title }}</h3>
+      <h3>{{ post.title }}</h3>   
     </div>
     <div class="post-content" [innerHTML]="post.content"></div>
 
     <!-- Button to toggle showing comments -->
     <button mat-button color="primary" (click)="toggleComments(post)">
       {{ post.showComments ? 'Hide Comments' : 'Show Comments' }}
-    </button>
+    </button>   
 
     <!-- Comments section -->
     @if (post.showComments){
