@@ -6,6 +6,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatButtonModule } from '@angular/material/button';
 import { Comment } from '../../models/comment';
+import { SignalRService } from '../../services/signalR.service';
 
 @Component({
   selector: 'app-comments',
@@ -24,7 +25,12 @@ export class CommentsComponent {
   comments: Comment[] = [];
   commentForm: FormGroup;
 
-  constructor(private fb: FormBuilder, private postService: PostService, private snackBar: MatSnackBar) {
+  constructor(
+    private fb: FormBuilder,
+    private postService: PostService,
+    private signalRService: SignalRService,
+    private snackBar: MatSnackBar
+  ) {
     this.commentForm = this.fb.group({
       content: ['', Validators.required]
     });
@@ -32,6 +38,14 @@ export class CommentsComponent {
 
   ngOnInit(): void {
     this.loadComments();
+
+    this.signalRService.addCommentUpdateListener();
+
+    this.signalRService.comments$.subscribe(newCommentMessage => {
+      if (newCommentMessage) {
+        this.loadComments();
+      }
+    });
   }
 
   loadComments() {
@@ -48,12 +62,12 @@ export class CommentsComponent {
 
       this.postService.addComment(this.postId, newComment).subscribe(
         comment => {
-          this.comments.push(comment); 
+          this.comments.push(comment);
           this.commentForm.reset();
-          this.snackBar.open('Comment added successfully!', 'Close', { duration: 3000 }); 
+          this.snackBar.open('Comment added successfully!', 'Close', { duration: 3000 });
         },
         error => {
-          this.snackBar.open('Failed to add comment. Please try again.', 'Close', { duration: 3000 }); 
+          this.snackBar.open('Failed to add comment. Please try again.', 'Close', { duration: 3000 });
         }
       );
     }

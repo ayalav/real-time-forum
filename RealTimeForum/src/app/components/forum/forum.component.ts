@@ -5,6 +5,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatButtonModule } from '@angular/material/button';
+import {MatIconModule} from '@angular/material/icon';
 import { PostService } from '../../services/post.service';
 import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import {
@@ -25,6 +26,7 @@ import {
 import 'ckeditor5/ckeditor5.css';
 import { CommentsComponent } from '../comments/comments.component';
 import { Post } from '../../models/post';
+import { SignalRService } from '../../services/signalR.service';
 
 @Component({
   selector: 'app-forum',
@@ -36,6 +38,7 @@ import { Post } from '../../models/post';
     HttpClientModule,
     MatFormFieldModule,
     MatInputModule,
+    MatIconModule,
     MatButtonModule,
   ],
   templateUrl: './forum.component.html',
@@ -43,7 +46,7 @@ import { Post } from '../../models/post';
 })
 export class ForumComponent implements OnInit {
   posts: Post[] = [];
-  postForm: FormGroup;  
+  postForm: FormGroup;
   showPostForm = false;
   public Editor = ClassicEditor;
   public config = {
@@ -70,7 +73,11 @@ export class ForumComponent implements OnInit {
     ]
   }
 
-  constructor(private fb: FormBuilder, private postService: PostService) {
+  constructor(
+    private fb: FormBuilder,
+    private postService: PostService,
+    private signalRService: SignalRService
+  ) {
     // Initialize form
     this.postForm = this.fb.group({
       title: ['', Validators.required],
@@ -78,8 +85,16 @@ export class ForumComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {   
+  ngOnInit(): void {
     this.loadPosts();
+    this.signalRService.startConnection();
+    this.signalRService.addPostUpdateListener();
+
+    this.signalRService.posts$.subscribe(newPostMessage => {
+      if (newPostMessage) {
+        this.loadPosts();
+      }
+    });
   }
 
   loadPosts() {
@@ -91,16 +106,16 @@ export class ForumComponent implements OnInit {
   createPost() {
     if (this.postForm.valid) {
       const newPost: Post = {
-        id: 0,  
+        id: 0,
         title: this.postForm.value.title,
         content: this.postForm.value.content,
         comments: []
       };
-      // this.postService.createPost(newPost).subscribe(post => {
+      this.postService.createPost(newPost).subscribe(post => {
         this.posts.push(newPost);
         this.postForm.reset();
         this.showPostForm = false;
-      // });
+      });
     }
   }
 
@@ -111,4 +126,8 @@ export class ForumComponent implements OnInit {
   toggleComments(post: any) {
     post.showComments = !post.showComments;
   }
+
+  // likePost(postId: number): void {
+  //   this.postService.addLike(postId);
+  // }
 }
