@@ -8,23 +8,27 @@ import { Comment } from '../models/comment';
   providedIn: 'root'
 })
 export class PostService {
-  private apiUrl = '';
+  private apiUrl = 'https://localhost:7260/post';
 
   constructor(private http: HttpClient) {}
 
+  // Fetch all posts
   getPosts(): Observable<Post[]> {
-    return this.http.get<Post[]>(this.apiUrl);
+    return this.http.get<Post[]>(`${this.apiUrl}`);
   }
 
+  // Create a new post 
   createPost(post: Post): Observable<Post> {
-    return this.http.post<Post>(this.apiUrl, post);
+    return this.http.post<Post>(`${this.apiUrl}`, post);
   }
 
+   // Fetch comments for a specific post
   getComments(postId: number): Observable<Comment[]> {
-    return this.http.get<Comment[]>(`${this.apiUrl}?postId=${postId}`);
+    return this.http.get<Comment[]>(`${this.apiUrl}/${postId}/comments`);
   }
 
-  addComment(comment: Comment): Observable<Comment> {
-    return this.http.post<Comment>(this.apiUrl, comment);
+    // Add a comment to a specific post
+    addComment(postId: number, comment: Comment): Observable<Comment> {
+      return this.http.post<Comment>(`${this.apiUrl}/${postId}/comments`, comment);
   }
 }
