@@ -3,8 +3,8 @@ Forum application with real-time post and comment updates using SignalR
 
 ## Technologies Used:
 - **Server-side:** ASP.NET Core (C#), Entity Framework Core
-- **Client-side:** Angular 16, Angular Material
-- **Database:** SQL Server (or MySQL) using Entity Framework Core for data access
+- **Client-side:** Angular 18, Angular Material
+- **Database:** SQL Server using Entity Framework Core for data access
 - **Real-time:** SignalR for real-time post and comment updates
 
 - ## Database Setup:
