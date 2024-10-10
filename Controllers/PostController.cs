@@ -13,10 +13,10 @@ namespace RealTimeForum.Controllers;
 [Route("[controller]")]
 public class PostController : ControllerBase
 {
-    private readonly PostService _postService;
+    private readonly IPostService _postService;
     private readonly IHubContext<ForumHub> _hubContext;
 
-    public PostController(PostService postService, IHubContext<ForumHub> hubContext)
+    public PostController(IPostService postService, IHubContext<ForumHub> hubContext)
     {
         _postService = postService;
         _hubContext = hubContext;
@@ -24,9 +24,9 @@ public class PostController : ControllerBase
 
     // Fetch all posts
     [HttpGet]
-    public IActionResult GetAllPosts()
+    public async Task<IActionResult> GetAllPosts()
     {
-        var posts = _postService.GetAllPosts();
+        var posts = await _postService.GetAllPosts();
         return Ok(posts);
     }
 
@@ -46,7 +46,6 @@ public class PostController : ControllerBase
         var userId = int.Parse(userIdClaim.Value);
 
         var createdPost = _postService.CreatePost(post, userId);
-        
         await _hubContext.Clients.All.SendAsync("ReceivePostUpdate", post.Title);
 
         return Ok(createdPost);
@@ -54,9 +53,9 @@ public class PostController : ControllerBase
 
     // Fetch comments for a specific post
     [HttpGet("{postId}/comments")]
-    public IActionResult GetComments(int postId)
+    public async Task<IActionResult> GetComments(int postId)
     {
-        var comments = _postService.GetComments(postId);
+        var comments = await  _postService.GetComments(postId);
         return Ok(comments);
     }
 
@@ -65,7 +64,6 @@ public class PostController : ControllerBase
     public async Task<IActionResult> AddComment(int postId, [FromBody] CommentDTO comment)
     {
         var createdComment = _postService.AddComment(postId, comment);
-
         await _hubContext.Clients.All.SendAsync("ReceiveCommentUpdate", comment.Content);
 
         return Ok(createdComment);

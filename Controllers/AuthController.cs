@@ -11,18 +11,18 @@ namespace RealTimeForum.Controllers;
 [Route("[controller]")]
 public class AuthController : ControllerBase
 {
-    private readonly AuthService _authService;
+    private readonly IAuthService _authService;
 
-    public AuthController(AuthService authService)
+    public AuthController(IAuthService authService)
     {
         _authService = authService;
     }
 
     // Registration endpoint
     [HttpPost("register")]
-    public IActionResult Register([FromBody] RegisterDTO registerModel)
+    public async Task<IActionResult> Register([FromBody] RegisterDTO registerModel)
     {
-        var result = _authService.Register(registerModel);
+        var result = await _authService.Register(registerModel);
 
         if (result == LoginRes.UserExist)
         {
@@ -30,28 +30,21 @@ public class AuthController : ControllerBase
         }
 
         return Ok(result);
+
     }
 
     // Login endpoint
     [HttpPost("login")]
- public IActionResult Login([FromBody] LoginDTO loginModel)
-{
-    LoginRes loginResult = LoginRes.Success;
-
-    var token = _authService.Login(loginModel, ref loginResult);
-
-    if (loginResult == LoginRes.UserNameIncorrect)
+    public async Task<IActionResult> Login([FromBody] LoginDTO loginModel)
     {
-        return Unauthorized("Username is incorrect.");
-    }
+        var loginResult = await _authService.Login(loginModel);
 
-    if (loginResult == LoginRes.PasswordIncorrect)
-    {
-        return Unauthorized("Password is incorrect.");
-    }
+        if (loginResult.Result == LoginRes.UserNameIncorrect || loginResult.Result == LoginRes.PasswordIncorrect)
+        {
+            return Unauthorized("Invalid login credentials.");
+        }
 
-    // Return the JWT token in the response
-    return Ok(new { token = token });
-}
+        return Ok(new { token = loginResult.Token });
+    }
 }
 
