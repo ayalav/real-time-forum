@@ -30,7 +30,12 @@ export class RegisterComponent {
   registerForm: FormGroup;
   isLoading = false;
 
-  constructor(private fb: FormBuilder, private router: Router, private authService: AuthService, private snackBar: MatSnackBar) {
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private authService: AuthService,
+    private snackBar: MatSnackBar
+  ) {
     // Initialize form
     this.registerForm = this.fb.group({
       username: ['', [Validators.required, Validators.email]],
@@ -63,20 +68,20 @@ export class RegisterComponent {
         password: this.registerForm.get('password')?.value
       };
       this.isLoading = true;
-  
+
       this.authService.register(registerData).subscribe(
         success => {
           this.isLoading = false;
           if (success) {
-            this.snackBar.open('Registration successful! Please log in.', 'Close', { duration: 3000 }); 
+            this.snackBar.open('Registration successful! Please log in.', 'Close', { duration: 3000 });
             this.router.navigate(['/login']);
           } else {
-            this.snackBar.open('Registration failed. Please try again.', 'Close', { duration: 3000 }); 
+            this.snackBar.open('Registration failed. Please try again.', 'Close', { duration: 3000 });
           }
         },
         error => {
           this.isLoading = false;
-          this.snackBar.open('Registration failed due to server error. Please try again.', 'Close', { duration: 3000 });  
+          this.snackBar.open('Registration failed due to server error. Please try again.', 'Close', { duration: 3000 });
         }
       );
     }

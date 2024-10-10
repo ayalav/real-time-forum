@@ -17,12 +17,12 @@ import { Login } from '../../models/login';
   standalone: true,
   imports: [
     ReactiveFormsModule,
-    HttpClientModule,  
+    HttpClientModule,
     MatInputModule,
     MatCardModule,
     MatButtonModule,
     MatFormFieldModule,
-    MatProgressSpinnerModule,   
+    MatProgressSpinnerModule,
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
@@ -31,15 +31,20 @@ export class LoginComponent {
   loginForm: FormGroup;
   isLoading = false;
 
-  constructor(private fb: FormBuilder, private router: Router, private authService: AuthService, private snackBar: MatSnackBar) {
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private authService: AuthService,
+    private snackBar: MatSnackBar
+  ) {
     // Initialize form
     this.loginForm = this.fb.group({
-      username: ['', [Validators.required, Validators.email]],  
+      username: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]]
     });
 
-     // Redirect if already logged in
-     this.authService.isLoggedIn$.subscribe(isLoggedIn => {
+    // Redirect if already logged in
+    this.authService.isLoggedIn$.subscribe(isLoggedIn => {
       if (isLoggedIn) {
         this.router.navigate(['/forum']);
       }
@@ -58,15 +63,15 @@ export class LoginComponent {
         success => {
           this.isLoading = false;
           if (success) {
-            this.snackBar.open('Login successful!', 'Close', { duration: 3000 }); 
+            this.snackBar.open('Login successful!', 'Close', { duration: 3000 });
             this.router.navigate(['/forum']);
           } else {
-            this.snackBar.open('Invalid login credentials.', 'Close', { duration: 3000 }); 
+            this.snackBar.open('Invalid login credentials.', 'Close', { duration: 3000 });
           }
         },
         error => {
           this.isLoading = false;
-          this.snackBar.open('Login failed. Please try again.', 'Close', { duration: 3000 }); 
+          this.snackBar.open('Login failed. Please try again.', 'Close', { duration: 3000 });
         }
       );
     }
