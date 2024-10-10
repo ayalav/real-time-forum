@@ -43,11 +43,10 @@ export class CommentsComponent {
   addComment() {
     if (this.commentForm.valid) {
       const newComment: Comment = {
-        postId: this.postId,
         content: this.commentForm.value.content
       };
 
-      this.postService.addComment(newComment).subscribe(
+      this.postService.addComment(this.postId, newComment).subscribe(
         comment => {
           this.comments.push(comment); 
           this.commentForm.reset();
