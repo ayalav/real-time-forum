@@ -7,29 +7,25 @@ namespace RealTimeForum.Services;
 
 public interface IPostService
 {
-    Task<List<Post>> GetAllPosts();
-    Task<Post> CreatePost(PostDTO post, int userId);
-    Task<List<Comment>> GetComments(int postId);
-    Task<Comment> AddComment(int postId, CommentDTO comment);
+    Task<List<PostResponseDTO>> GetAllPosts();
+    Task<PostResponseDTO> CreatePost(PostRequestDTO post, int userId);
+    Task<List<CommentResponseDTO>> GetComments(int postId);
+    Task<CommentResponseDTO> AddComment(int postId, CommentRequestDTO comment, int userId);
 }
 
-public class PostService : IPostService
+public class PostService(MyDbContext dbContext) : IPostService
 {
-    private readonly MyDbContext _dbContext;
-
-    public PostService(MyDbContext dbContext)
-    {
-        _dbContext = dbContext;
-    }
-
     // Fetch all posts
-    public async Task<List<Post>> GetAllPosts()
+    public async Task<List<PostResponseDTO>> GetAllPosts()
     {
-        return await _dbContext.Posts.ToListAsync();
+        return await dbContext
+            .Posts
+            .Select(post => PostToDTO(post))
+            .ToListAsync();
     }
 
     // Create a new post
-    public async Task<Post> CreatePost(PostDTO post, int userId)
+    public async Task<PostResponseDTO> CreatePost(PostRequestDTO post, int userId)
     {
         var newPost = new Post()
         {
@@ -38,29 +34,55 @@ public class PostService : IPostService
             UserId = userId
         };
 
-        _dbContext.Posts.Add(newPost);
-        await _dbContext.SaveChangesAsync();
-        return newPost;
+        dbContext.Posts.Add(newPost);
+        await dbContext.SaveChangesAsync();
+
+        return PostToDTO(newPost);
     }
 
     // Fetch comments for a specific post
-    public async Task<List<Comment>> GetComments(int postId)
+    public async Task<List<CommentResponseDTO>> GetComments(int postId)
     {
-        return await _dbContext.Comments.Where(c => c.PostId == postId).ToListAsync();
+        return await dbContext
+            .Comments
+            .Where(c => c.PostId == postId)
+            .Select(comment => CommentToDTO(comment))
+            .ToListAsync();
     }
 
     // Add a comment to a specific post
-    public async Task<Comment> AddComment(int postId, CommentDTO comment)
+    public async Task<CommentResponseDTO> AddComment(int postId, CommentRequestDTO comment, int userId)
     {
         var newComment = new Comment()
         {
             PostId = postId,
             Content = comment.Content,
+            UserId = userId
         };
 
-        _dbContext.Comments.Add(newComment);
-        await _dbContext.SaveChangesAsync();
-        return newComment;
+        dbContext.Comments.Add(newComment);
+        await dbContext.SaveChangesAsync();
+
+        return CommentToDTO(newComment);
+    }
+
+    private static PostResponseDTO PostToDTO(Post post)
+    {
+        return new PostResponseDTO
+        {
+            Title = post.Title,
+            Content = post.Content,
+            UserName = post.User.UserName
+        };
+    }
+
+    private static CommentResponseDTO CommentToDTO(Comment comment)
+    {
+        return new CommentResponseDTO
+        {
+            Content = comment.Content,
+            UserName = comment.User.UserName
+        };
     }
 }
 

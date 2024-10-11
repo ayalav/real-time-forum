@@ -1,6 +1,12 @@
 namespace RealTimeForum.Models;
 
-public class CommentDTO
+public class CommentRequestDTO
 {
-    public string Content { get; set; }
+    public required string Content { get; set; }
+}
+
+public class CommentResponseDTO
+{
+    public required string Content { get; set; }
+    public required string UserName { get; set; }
 }

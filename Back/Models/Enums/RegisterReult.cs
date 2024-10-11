@@ -1,9 +1,9 @@
 namespace RealTimeForum.Models.Enums;
 
-public enum LoginRes
+public enum RegisterResult
 {
     Success,
     UserNameIncorrect,
     PasswordIncorrect,
-    UserExist  
+    UserExist
 }

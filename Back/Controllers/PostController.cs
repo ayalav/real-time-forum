@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
-using RealTimeForum.Data.Entities;
 using RealTimeForum.Hubs;
 using RealTimeForum.Models;
 using RealTimeForum.Services;
@@ -11,42 +10,27 @@ namespace RealTimeForum.Controllers;
 [Authorize]
 [ApiController]
 [Route("[controller]")]
-public class PostController : ControllerBase
+public class PostController(IPostService postService, IHubContext<ForumHub> hubContext) : ControllerBase
 {
-    private readonly IPostService _postService;
-    private readonly IHubContext<ForumHub> _hubContext;
-
-    public PostController(IPostService postService, IHubContext<ForumHub> hubContext)
-    {
-        _postService = postService;
-        _hubContext = hubContext;
-    }
-
     // Fetch all posts
     [HttpGet]
     public async Task<IActionResult> GetAllPosts()
     {
-        var posts = await _postService.GetAllPosts();
+        var posts = await postService.GetAllPosts();
         return Ok(posts);
     }
 
     // Create a new post
     [HttpPost]
-    public async Task<IActionResult> CreatePost([FromBody] PostDTO post)
+    public async Task<IActionResult> CreatePost([FromBody] PostRequestDTO post)
     {
-        // Get the user ID from the JWT token (claims)
-        var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "UserId");
+        var userId = GetUserId();
 
-        if (userIdClaim == null)
-        {
+        if (userId == 0)
             return Unauthorized("User ID not found in token.");
-        }
 
-        // Parse the user ID
-        var userId = int.Parse(userIdClaim.Value);
-
-        var createdPost = _postService.CreatePost(post, userId);
-        await _hubContext.Clients.All.SendAsync("ReceivePostUpdate", post.Title);
+        var createdPost = await postService.CreatePost(post, userId);
+        await hubContext.Clients.All.SendAsync("ReceivePostUpdate", post.Title);
 
         return Ok(createdPost);
     }
@@ -55,18 +39,34 @@ public class PostController : ControllerBase
     [HttpGet("{postId}/comments")]
     public async Task<IActionResult> GetComments(int postId)
     {
-        var comments = await  _postService.GetComments(postId);
+        var comments = await postService.GetComments(postId);
         return Ok(comments);
     }
 
     // Add a comment to a specific post
     [HttpPost("{postId}/comments")]
-    public async Task<IActionResult> AddComment(int postId, [FromBody] CommentDTO comment)
+    public async Task<IActionResult> AddComment(int postId, [FromBody] CommentRequestDTO comment)
     {
-        var createdComment = _postService.AddComment(postId, comment);
-        await _hubContext.Clients.All.SendAsync("ReceiveCommentUpdate", comment.Content);
+        var userId = GetUserId();
+
+        if (userId == 0)
+            return Unauthorized("User ID not found in token.");
+
+        var createdComment = await postService.AddComment(postId, comment, userId);
+        await hubContext.Clients.All.SendAsync("ReceiveCommentUpdate", comment.Content);
 
         return Ok(createdComment);
+    }
+
+    // Get the user ID from the JWT token claim
+    private int GetUserId()
+    {
+        var claim = User.Claims.FirstOrDefault(c => c.Type == "UserId");
+        if (claim == null)
+            return 0;
+
+        var userId = int.Parse(claim.Value);
+        return userId;
     }
 }
 

@@ -9,42 +9,36 @@ namespace RealTimeForum.Controllers;
 [AllowAnonymous]
 [ApiController]
 [Route("[controller]")]
-public class AuthController : ControllerBase
+public class AuthController(IAuthService authService) : ControllerBase
 {
-    private readonly IAuthService _authService;
-
-    public AuthController(IAuthService authService)
-    {
-        _authService = authService;
-    }
-
     // Registration endpoint
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterDTO registerModel)
     {
-        var result = await _authService.Register(registerModel);
+        var result = await authService.Register(registerModel);
 
-        if (result == LoginRes.UserExist)
+        return result switch
         {
-            return BadRequest("Username already exists.");
-        }
-
-        return Ok(result);
-
+            RegisterResult.UserExist => BadRequest("Username already exists."),
+            RegisterResult.UserNameIncorrect => BadRequest("Username is required."),
+            RegisterResult.PasswordIncorrect => BadRequest("Password is required."),
+            RegisterResult.Success => Ok("User registered successfully."),
+            _ => BadRequest("An error occurred.")
+        };
     }
 
     // Login endpoint
     [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] LoginDTO loginModel)
+    public async Task<IActionResult> Login([FromBody] LoginRequestDTO loginModel)
     {
-        var loginResult = await _authService.Login(loginModel);
+        var loginResult = await authService.Login(loginModel);
 
-        if (loginResult.Result == LoginRes.UserNameIncorrect || loginResult.Result == LoginRes.PasswordIncorrect)
+        return loginResult.Result switch
         {
-            return Unauthorized("Invalid login credentials.");
-        }
-
-        return Ok(new { token = loginResult.Token });
+            LoginRes.UserNameIncorrect or LoginRes.PasswordIncorrect => Unauthorized("Invalid login credentials."),
+            LoginRes.Success => Ok(new { token = loginResult.Token }),
+            _ => Unauthorized("An error occurred.")
+        };
     }
 }
 
