@@ -23,6 +23,9 @@ builder.Services.AddAuthentication(options =>
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 }).AddJwtBearer(options =>
 {
+    var jwtKey = builder.Configuration["Jwt:Key"];
+    ArgumentException.ThrowIfNullOrEmpty(jwtKey, "JWT key is missing.");
+
     options.TokenValidationParameters = new TokenValidationParameters
     {
         ValidateIssuer = true,
@@ -31,7 +34,7 @@ builder.Services.AddAuthentication(options =>
         ValidateIssuerSigningKey = true,
         ValidIssuer = builder.Configuration["Jwt:Issuer"],
         ValidAudience = builder.Configuration["Jwt:Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
     };
 });
 
@@ -41,15 +44,15 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowSpecificOrigin",
         builder =>
         {
-            builder.WithOrigins("http://localhost:4200") 
+            builder.WithOrigins("http://localhost:4200")
                    .AllowAnyHeader()
                    .AllowAnyMethod()
-                   .AllowCredentials();  
+                   .AllowCredentials();
         });
 });
 
 builder.Services.AddControllers();
-builder.Services.AddSignalR(); 
+builder.Services.AddSignalR();
 
 var app = builder.Build();
 
@@ -66,14 +69,11 @@ app.UseCors("AllowSpecificOrigin");
 
 // Use routing, authentication, and authorization
 app.UseRouting();
-app.UseAuthentication();  
-app.UseAuthorization(); 
+app.UseAuthentication();
+app.UseAuthorization();
 
 // Map controllers
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapControllers();
-     endpoints.MapHub<ForumHub>("/forumHub");
-});
+app.MapControllers();
+app.MapHub<ForumHub>("/forumHub");
 
 app.Run();
