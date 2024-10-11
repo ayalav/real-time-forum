@@ -4,7 +4,7 @@ import { AuthGuard } from './guards/auth.guard';
 export const routes: Routes = [
     {
         path: '',
-        redirectTo: 'login',
+        redirectTo: 'forum',
         pathMatch: 'full'
     },
     {
@@ -18,10 +18,10 @@ export const routes: Routes = [
     {
         path: 'forum',
         loadComponent: () => import('./components/forum/forum.component').then(m => m.ForumComponent),
-        canActivate: [AuthGuard] 
+        canActivate: [AuthGuard]
     },
     {
         path: '**',
-        redirectTo: 'login'
+        redirectTo: 'forum'
     }
 ];
