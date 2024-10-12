@@ -24,22 +24,18 @@ import {
   Undo
 } from 'ckeditor5';
 import 'ckeditor5/ckeditor5.css';
-import { CommentsComponent } from '../comments/comments.component';
 import { Post } from '../../models/post';
 import { SignalRService } from '../../services/signalR.service';
+import { PostComponent } from '../post/post.component';
 
 @Component({
   selector: 'app-forum',
   standalone: true,
   imports: [
-    CommentsComponent,
+    PostComponent,
     CKEditorModule,
     ReactiveFormsModule,
     HttpClientModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatIconModule,
-    MatButtonModule,
   ],
   templateUrl: './forum.component.html',
   styleUrl: './forum.component.scss'
@@ -126,8 +122,5 @@ export class ForumComponent implements OnInit {
   toggleComments(post: any) {
     post.showComments = !post.showComments;
   }
-
-  // likePost(postId: number): void {
-  //   this.postService.addLike(postId);
-  // }
 }
+

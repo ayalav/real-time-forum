@@ -36,23 +36,6 @@
 
   <!-- Display list of posts -->
   @for (post of posts; track post){
-  <div class="post">
-    <div class="post-header">
-      <h3>{{ post.title }}</h3>   
-    </div>
-    <div class="post-content" [innerHTML]="post.content"></div>
-
-    <!-- Button to toggle showing comments -->
-    <button mat-button color="primary" (click)="toggleComments(post)">
-      {{ post.showComments ? 'Hide Comments' : 'Show Comments' }}
-    </button>   
-
-    <!-- Comments section -->
-    @if (post.showComments){
-    <div class="comments-section">
-      <app-comments [postId]="post.id"></app-comments>
-    </div>
-    }
-  </div>
+    <app-post [post]="post"></app-post>
   }
 </div>
