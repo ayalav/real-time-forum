@@ -8,7 +8,7 @@ Forum application with real-time post and comment updates using SignalR
 - **Real-time:** SignalR for real-time post and comment updates
 
 - ## Database Setup:
-1. Run the SQL script located at `RealTimeForum/DatabaseScripts/CreateDatabaseScript.sql` in your SQL Server to create the database schema.
+1. Run the SQL script located at `/Back/Migrations/CreateDB.sql` in your SQL Server to create the database schema.
 2. Once the script runs successfully, the database will be ready for use.
 
 ![image](https://github.com/user-attachments/assets/270a009f-796a-4448-9750-40952945abb3)
