@@ -40,7 +40,8 @@ export class LoginComponent {
     // Initialize form
     this.loginForm = this.fb.group({
       username: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]]
+      password: ['', [Validators.required, Validators.minLength(6)]],
+      rememberMe: [false]
     });
 
     // Redirect if already logged in
@@ -57,9 +58,12 @@ export class LoginComponent {
         username: this.loginForm.get('username')?.value,
         password: this.loginForm.get('password')?.value
       };
+
       this.isLoading = true;
 
-      this.authService.login(loginData).subscribe(
+      const rememberMe = this.loginForm.get('rememberMe')?.value;
+
+      this.authService.login(loginData, rememberMe).subscribe(
         success => {
           this.isLoading = false;
           if (success) {

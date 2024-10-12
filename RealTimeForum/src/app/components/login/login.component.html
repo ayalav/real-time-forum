@@ -24,6 +24,8 @@
                 }
             </mat-form-field> 
 
+            <mat-checkbox formControlName="rememberMe">Remember Me</mat-checkbox>
+
             <button mat-raised-button color="primary" type="submit" [disabled]="loginForm.invalid || isLoading">
                 @if (isLoading){
                 <mat-spinner diameter="20"></mat-spinner>

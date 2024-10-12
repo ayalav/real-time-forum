@@ -14,16 +14,20 @@ export class AuthService {
   constructor(
     private http: HttpClient
   ) {
-    const token = localStorage.getItem('authToken');
+    const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
     this.isLoggedInSubject = new BehaviorSubject<boolean>(!!token);
   }
 
   // Sends login request and updates login status if successful
-  login(loginData: Login): Observable<boolean> {
+  login(loginData: Login, rememberMe: boolean): Observable<boolean> {
     return this.http.post<{ token: string }>(`${this.apiUrl}/login`, loginData).pipe(
       map(response => {
         if (response && response.token) {
-          localStorage.setItem('authToken', response.token);  // Store the token
+          if (rememberMe) {
+            localStorage.setItem('authToken', response.token);  
+          } else {
+            sessionStorage.setItem('authToken', response.token); 
+          }
           this.isLoggedInSubject.next(true);
           return true;
         }
@@ -36,6 +40,7 @@ export class AuthService {
       })
     );
   }
+
 
   // Sends registration request 
   register(registerData: Register): Observable<boolean> {
@@ -58,5 +63,7 @@ export class AuthService {
   // Logs out the user by removing the token
   logout(): void {
     localStorage.removeItem('authToken');
+    sessionStorage.removeItem('authToken');
+    this.isLoggedInSubject.next(false);
   }
 }
