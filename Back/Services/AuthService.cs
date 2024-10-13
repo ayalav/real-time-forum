@@ -7,6 +7,7 @@ using System.Text;
 using RealTimeForum.Models.Enums;
 using RealTimeForum.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Text.RegularExpressions;
 
 namespace RealTimeForum.Services;
 
@@ -26,7 +27,7 @@ public class AuthService(MyDbContext dbContext, IConfiguration configuration) : 
             .FirstOrDefaultAsync(u => u.Email == model.Email);
 
         if (user == null)
-            return new LoginResponseDTO { Result = LoginRes.UserNameIncorrect };
+            return new LoginResponseDTO { Result = LoginRes.UserNotFound };
 
         bool passwordMatch = BCrypt.Net.BCrypt.Verify(model.Password, user.Password);
 
@@ -46,6 +47,12 @@ public class AuthService(MyDbContext dbContext, IConfiguration configuration) : 
 
         if (model.Password == null)
             return RegisterResult.PasswordIncorrect;
+
+        if (model.Email == null)
+            return RegisterResult.EmailIncorrect;
+
+        if (!IsValidEmail(model.Email))
+            return RegisterResult.InvalidEmailFormat;
 
         var UserExist = await dbContext
             .Users
@@ -91,6 +98,12 @@ public class AuthService(MyDbContext dbContext, IConfiguration configuration) : 
         );
 
         return new JwtSecurityTokenHandler().WriteToken(token);
+    }
+
+    private static bool IsValidEmail(string email)
+    {
+        var emailRegex = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
+        return Regex.IsMatch(email, emailRegex);
     }
 }
 

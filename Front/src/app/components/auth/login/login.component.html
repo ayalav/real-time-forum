@@ -4,7 +4,7 @@
         <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
             <mat-form-field appearance="outline" class="full-width">
                 <mat-label>Email</mat-label>
-                <input matInput type="text" formControlName="email" placeholder="Enter your email" />
+                <input matInput type="email" formControlName="email" placeholder="Enter your email" />
                 @if (loginForm.get('email')?.hasError('required')){
                 <mat-error>Username is required.</mat-error>
                 }
@@ -19,7 +19,7 @@
                 @if (loginForm.get('password')?.hasError('required')){
                 <mat-error>password is required.</mat-error>
                 }
-                @if (loginForm.get('username')?.hasError('minlength')){
+                @if (loginForm.get('password')?.hasError('minlength')){
                 <mat-error>Password must be at least 6 characters long.</mat-error>
                 }
             </mat-form-field> 

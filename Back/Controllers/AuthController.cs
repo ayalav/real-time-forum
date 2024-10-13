@@ -22,6 +22,8 @@ public class AuthController(IAuthService authService) : ControllerBase
             RegisterResult.UserExist => BadRequest("Username already exists."),
             RegisterResult.UserNameIncorrect => BadRequest("Username is required."),
             RegisterResult.PasswordIncorrect => BadRequest("Password is required."),
+            RegisterResult.EmailIncorrect => BadRequest("Email is required."),
+            RegisterResult.InvalidEmailFormat => BadRequest("Email is in an invalid format."),
             RegisterResult.Success => Ok(result),
             _ => BadRequest("An error occurred.")
         };
@@ -35,7 +37,7 @@ public class AuthController(IAuthService authService) : ControllerBase
 
         return loginResult.Result switch
         {
-            LoginRes.UserNameIncorrect or LoginRes.PasswordIncorrect => Unauthorized("Invalid login credentials."),
+            LoginRes.UserNotFound or LoginRes.PasswordIncorrect => Unauthorized("Invalid login credentials."),
             LoginRes.Success => Ok(new { token = loginResult.Token }),
             _ => Unauthorized("An error occurred.")
         };
