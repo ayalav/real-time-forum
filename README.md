@@ -11,6 +11,13 @@ Forum application with real-time post and comment updates using SignalR
 1. Run the SQL script located at `/Back/Migrations/CreateDB.sql` in your SQL Server to create the database schema.
 2. Once the script runs successfully, the database will be ready for use.
 
-![image](https://github.com/user-attachments/assets/270a009f-796a-4448-9750-40952945abb3)
-![image](https://github.com/user-attachments/assets/7ccbce5e-7118-4db9-ac33-d01bd03fcdf8)
-![image](https://github.com/user-attachments/assets/cc7e056f-8381-4c30-a431-100c21d8e96d)
+![image](https://github.com/user-attachments/assets/4e98f4d9-b6f9-453b-9231-a7dd234831fe)
+![image](https://github.com/user-attachments/assets/af630098-a735-4537-a717-e409918c3532)
+![image](https://github.com/user-attachments/assets/72ad9bdc-70f1-4ad1-b0d7-4c3ef28e39bf)
+
+
+
+
+
+
+
