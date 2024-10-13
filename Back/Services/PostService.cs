@@ -20,6 +20,7 @@ public class PostService(MyDbContext dbContext) : IPostService
     {
         return await dbContext
             .Posts
+            .Include(post => post.User)
             .Select(post => PostToDTO(post))
             .ToListAsync();
     }
@@ -37,6 +38,11 @@ public class PostService(MyDbContext dbContext) : IPostService
         dbContext.Posts.Add(newPost);
         await dbContext.SaveChangesAsync();
 
+        var postWithUser = await dbContext
+                        .Posts
+                        .Include(c => c.User)
+                        .FirstOrDefaultAsync(c => c.Id == newPost.Id);
+
         return PostToDTO(newPost);
     }
 
@@ -45,6 +51,7 @@ public class PostService(MyDbContext dbContext) : IPostService
     {
         return await dbContext
             .Comments
+            .Include(comment => comment.User)
             .Where(c => c.PostId == postId)
             .Select(comment => CommentToDTO(comment))
             .ToListAsync();
@@ -63,6 +70,11 @@ public class PostService(MyDbContext dbContext) : IPostService
         dbContext.Comments.Add(newComment);
         await dbContext.SaveChangesAsync();
 
+        var commentWithUser = await dbContext
+                     .Comments
+                     .Include(c => c.User)
+                     .FirstOrDefaultAsync(c => c.Id == newComment.Id);
+
         return CommentToDTO(newComment);
     }
 
@@ -70,6 +82,7 @@ public class PostService(MyDbContext dbContext) : IPostService
     {
         return new PostResponseDTO
         {
+            Id = post.Id,
             Title = post.Title,
             Content = post.Content,
             UserName = post.User.UserName
