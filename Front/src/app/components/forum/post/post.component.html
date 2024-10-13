@@ -1,6 +1,7 @@
 <div class="post">
     <div class="post-header">
       <h3>{{ post.title }}</h3>   
+      <span class="post-author">Posted by <strong>{{ post.userName }}</strong></span>
     </div>
     <div class="post-content" [innerHTML]="post.content"></div>
 

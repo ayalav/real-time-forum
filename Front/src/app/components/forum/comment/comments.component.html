@@ -2,7 +2,9 @@
     <h4>Comments</h4>
 
     @for (comment of comments; track comment){
-    <p class="comment">{{ comment.content }}</p>
+        <p class="comment">
+            <strong>{{ comment.userName }}</strong>: {{ comment.content }} 
+        </p>
     }
 
     <form [formGroup]="commentForm" (ngSubmit)="addComment()">

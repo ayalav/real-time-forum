@@ -1,0 +1,35 @@
+@import '../../../../styles.scss';
+  
+  .post {
+      background-color: $primary-light-color;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+
+      .post-header {
+          h3 {
+              margin: 0;
+              font-size: 1.5rem;
+              color: $primary-dark-color;
+          }
+
+          .post-author {
+              font-size: 14px;
+              display: block;
+              margin-top: 5px;
+          }
+      }
+
+      .post-content {
+          margin-top: 1rem;
+          font-size: 1.1rem;
+      }
+
+      .comments-section {
+          margin-top: 1rem;
+          padding: 0.5rem;
+          background-color: $background-color;
+          border-radius: 5px;
+      }
+  }
