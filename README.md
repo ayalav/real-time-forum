@@ -13,7 +13,8 @@ Forum application with real-time post and comment updates using SignalR
 
 ![image](https://github.com/user-attachments/assets/4e98f4d9-b6f9-453b-9231-a7dd234831fe)
 ![image](https://github.com/user-attachments/assets/af630098-a735-4537-a717-e409918c3532)
-![image](https://github.com/user-attachments/assets/84825c8f-28ad-4f85-afb7-cf1e6bfdf475)
+![image](https://github.com/user-attachments/assets/57ec0f2e-a31a-420f-8b3d-7540bb1b9946)
+
 
 
 
