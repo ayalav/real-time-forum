@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -21,7 +21,7 @@ import { PostFormComponent } from './post-form/post-form.component';
   styleUrl: './forum.component.scss'
 })
 export class ForumComponent implements OnInit {
-  posts: Post[] = [];
+  posts = signal<Post[]>([]);
   postForm: FormGroup;
   showPostForm = false; 
 
@@ -51,7 +51,7 @@ export class ForumComponent implements OnInit {
 
   loadPosts() {
     this.postService.getPosts().subscribe(posts => {
-      this.posts = posts;
+      this.posts.set(posts);
     });
   }
 
@@ -64,7 +64,7 @@ export class ForumComponent implements OnInit {
         comments: []
       };
       this.postService.createPost(newPost).subscribe(post => {
-        this.posts.push(newPost);
+        this.posts.update(posts => [...posts, post]);
         this.postForm.reset();
         this.showPostForm = false;
       });

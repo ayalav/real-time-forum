@@ -1,4 +1,4 @@
-import { Component, input } from '@angular/core';
+import { Component, input, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -22,7 +22,7 @@ import { NotificationService } from '../../../services/notification.service';
 })
 export class CommentsComponent {
   postId = input.required<number>();
-  comments: Comment[] = [];
+  comments = signal<Comment[]>([]);
   commentForm: FormGroup;
 
   constructor(
@@ -50,7 +50,7 @@ export class CommentsComponent {
 
   loadComments() {
     this.postService.getComments(this.postId()).subscribe(comments => {
-      this.comments = comments;
+      this.comments.set(comments);
     });
   }
 
@@ -62,7 +62,7 @@ export class CommentsComponent {
 
       this.postService.addComment(this.postId(), newComment).subscribe(
         comment => {
-          this.comments.push(comment);
+          this.comments.update(comments => [...comments, comment]);
           this.commentForm.reset();
           this.notificationService.showSuccess('Comment added successfully!');
         },

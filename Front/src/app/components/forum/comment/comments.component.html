@@ -1,7 +1,7 @@
 <div class="comments-container">
     <h4>Comments</h4>
 
-    @for (comment of comments; track comment){
+    @for (comment of comments(); track comment){
         <p class="comment">
             <strong>{{ comment.userName }}</strong>: {{ comment.content }} 
         </p>
