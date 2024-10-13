@@ -6,8 +6,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { PostService } from '../../services/post.service';
 import { Post } from '../../models/post';
 import { SignalRService } from '../../services/signalR.service';
-import { PostComponent } from '../post/post.component';
-import { PostFormComponent } from '../post-form/post-form.component';
+import { PostComponent } from './post/post.component';
+import { PostFormComponent } from './post-form/post-form.component';
 
 @Component({
   selector: 'app-forum',

@@ -1,12 +1,12 @@
 import { Component, Input } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { PostService } from '../../services/post.service';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatButtonModule } from '@angular/material/button';
-import { Comment } from '../../models/comment';
-import { SignalRService } from '../../services/signalR.service';
+import { PostService } from '../../../services/post.service';
+import { SignalRService } from '../../../services/signalR.service';
+import { Comment } from '../../../models/comment';
 
 @Component({
   selector: 'app-comments',

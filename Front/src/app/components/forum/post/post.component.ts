@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
-import { Post } from '../../models/post';
-import { CommentsComponent } from '../comments/comments.component';
+import { Post } from '../../../models/post';
+import { CommentsComponent } from '../../forum/comment/comments.component';
 
 @Component({
   selector: 'app-post',

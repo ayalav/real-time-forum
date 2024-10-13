@@ -9,8 +9,9 @@ import { MatError } from '@angular/material/form-field';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { HttpClientModule } from '@angular/common/http';
-import { AuthService } from '../../services/auth.service';
-import { Login } from '../../models/login';
+import { AuthService } from '../../../services/auth.service';
+import { Login } from '../../../models/login';
+
 
 @Component({
   selector: 'app-login',
