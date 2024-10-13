@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { PostService } from '../../services/post.service';
@@ -15,7 +14,6 @@ import { PostFormComponent } from './post-form/post-form.component';
   imports: [
     PostComponent,
     PostFormComponent,    
-    HttpClientModule, 
     MatIconModule,
     MatButtonModule,
   ],

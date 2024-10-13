@@ -6,7 +6,6 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { HttpClientModule } from '@angular/common/http';
 import { AuthService } from '../../../services/auth.service';
 import { NotificationService } from '../../../services/notification.service';
 import { Register } from '../../../models/register';
@@ -15,7 +14,6 @@ import { Register } from '../../../models/register';
   standalone: true,
   imports: [
     ReactiveFormsModule,
-    HttpClientModule,
     MatInputModule,
     MatCardModule,
     MatButtonModule,

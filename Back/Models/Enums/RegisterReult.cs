@@ -5,5 +5,7 @@ public enum RegisterResult
     Success,
     UserNameIncorrect,
     PasswordIncorrect,
-    UserExist
+    UserExist,
+    InvalidEmailFormat,
+    EmailIncorrect
 }

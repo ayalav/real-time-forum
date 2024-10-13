@@ -8,7 +8,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatError } from '@angular/material/form-field';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { HttpClientModule } from '@angular/common/http';
 import { AuthService } from '../../../services/auth.service';
 import { Login } from '../../../models/login';
 import { NotificationService } from '../../../services/notification.service';
@@ -19,7 +18,6 @@ import { NotificationService } from '../../../services/notification.service';
   standalone: true,
   imports: [
     ReactiveFormsModule,
-    HttpClientModule,
     MatInputModule,
     MatCardModule,
     MatButtonModule,
