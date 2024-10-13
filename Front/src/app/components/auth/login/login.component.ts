@@ -6,11 +6,11 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatError } from '@angular/material/form-field';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { HttpClientModule } from '@angular/common/http';
 import { AuthService } from '../../../services/auth.service';
 import { Login } from '../../../models/login';
+import { NotificationService } from '../../../services/notification.service';
 
 
 @Component({
@@ -36,7 +36,7 @@ export class LoginComponent {
     private fb: FormBuilder,
     private router: Router,
     private authService: AuthService,
-    private snackBar: MatSnackBar
+    private notificationService: NotificationService,
   ) {
     // Initialize form
     this.loginForm = this.fb.group({
@@ -68,15 +68,15 @@ export class LoginComponent {
         success => {
           this.isLoading = false;
           if (success) {
-            this.snackBar.open('Login successful!', 'Close', { duration: 3000 });
+            this.notificationService.showSuccess('Login successful!');
             this.router.navigate(['/forum']);
           } else {
-            this.snackBar.open('Invalid login credentials.', 'Close', { duration: 3000 });
+            this.notificationService.showError('Invalid login credentials.');
           }
         },
         error => {
           this.isLoading = false;
-          this.snackBar.open('Login failed. Please try again.', 'Close', { duration: 3000 });
+          this.notificationService.showError('Login failed. Please try again.');
         }
       );
     }

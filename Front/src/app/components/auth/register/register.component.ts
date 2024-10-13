@@ -6,11 +6,10 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { HttpClientModule } from '@angular/common/http';
-import { AuthService } from '../../services/auth.service';
-import { Register } from '../../models/register';
-
+import { AuthService } from '../../../services/auth.service';
+import { NotificationService } from '../../../services/notification.service';
+import { Register } from '../../../models/register';
 @Component({
   selector: 'app-register',
   standalone: true,
@@ -34,7 +33,7 @@ export class RegisterComponent {
     private fb: FormBuilder,
     private router: Router,
     private authService: AuthService,
-    private snackBar: MatSnackBar
+    private notificationService: NotificationService,
   ) {
     // Initialize form
     this.registerForm = this.fb.group({
@@ -73,15 +72,15 @@ export class RegisterComponent {
         success => {
           this.isLoading = false;
           if (success) {
-            this.snackBar.open('Registration successful! Please log in.', 'Close', { duration: 3000 });
+            this.notificationService.showSuccess('Registration successful! Please log in.');
             this.router.navigate(['/login']);
           } else {
-            this.snackBar.open('Registration failed. Please try again.', 'Close', { duration: 3000 });
+            this.notificationService.showError('Registration failed. Please try again.');
           }
         },
         error => {
           this.isLoading = false;
-          this.snackBar.open('Registration failed due to server error. Please try again.', 'Close', { duration: 3000 });
+          this.notificationService.showError('Registration failed due to server error. Please try again.');
         }
       );
     }

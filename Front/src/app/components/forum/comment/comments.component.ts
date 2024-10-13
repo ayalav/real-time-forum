@@ -2,11 +2,11 @@ import { Component, Input } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatButtonModule } from '@angular/material/button';
 import { PostService } from '../../../services/post.service';
 import { SignalRService } from '../../../services/signalR.service';
 import { Comment } from '../../../models/comment';
+import { NotificationService } from '../../../services/notification.service';
 
 @Component({
   selector: 'app-comments',
@@ -29,7 +29,7 @@ export class CommentsComponent {
     private fb: FormBuilder,
     private postService: PostService,
     private signalRService: SignalRService,
-    private snackBar: MatSnackBar
+    private notificationService: NotificationService,
   ) {
     this.commentForm = this.fb.group({
       content: ['', Validators.required]
@@ -64,10 +64,10 @@ export class CommentsComponent {
         comment => {
           this.comments.push(comment);
           this.commentForm.reset();
-          this.snackBar.open('Comment added successfully!', 'Close', { duration: 3000 });
+          this.notificationService.showSuccess('Comment added successfully!');
         },
         error => {
-          this.snackBar.open('Failed to add comment. Please try again.', 'Close', { duration: 3000 });
+          this.notificationService.showError('Failed to add comment. Please try again.');
         }
       );
     }

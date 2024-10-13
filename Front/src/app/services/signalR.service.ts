@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import * as signalR from '@microsoft/signalr';
 import { BehaviorSubject } from 'rxjs';
+import { NotificationService } from './notification.service';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,7 @@ export class SignalRService {
   public comments$ = this.commentsSource.asObservable();
 
   constructor(
-    private snackBar: MatSnackBar
+    private notificationService: NotificationService
   ) { }
 
   //Starting a connection to the Hub
@@ -35,7 +36,7 @@ export class SignalRService {
   public addCommentUpdateListener(): void {
     this.hubConnection.on('ReceiveCommentUpdate', (message) => {
       this.commentsSource.next(message);
-      this.snackBar.open(`New comment: ${message}`, 'Close', { duration: 3000 });
+      this.notificationService.showSuccess(`New comment: ${message}`);
     });
   }
 
@@ -43,7 +44,7 @@ export class SignalRService {
   public addPostUpdateListener(): void {
     this.hubConnection.on('ReceivePostUpdate', (message) => {
       this.postsSource.next(message);
-      this.snackBar.open(`New post: ${message}`, 'Close', { duration: 3000 });
+      this.notificationService.showSuccess(`New post: ${message}`);
     });
   }
 }
