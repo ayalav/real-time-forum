@@ -6,6 +6,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatError } from '@angular/material/form-field';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { HttpClientModule } from '@angular/common/http';
 import { AuthService } from '../../../services/auth.service';
@@ -23,6 +24,7 @@ import { NotificationService } from '../../../services/notification.service';
     MatCardModule,
     MatButtonModule,
     MatFormFieldModule,
+    MatCheckboxModule,
     MatProgressSpinnerModule,
   ],
   templateUrl: './login.component.html',
@@ -40,7 +42,7 @@ export class LoginComponent {
   ) {
     // Initialize form
     this.loginForm = this.fb.group({
-      username: ['', [Validators.required, Validators.email]],
+      email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.minLength(6)]],
       rememberMe: [false]
     });
@@ -56,7 +58,7 @@ export class LoginComponent {
   onSubmit() {
     if (this.loginForm.valid) {
       const loginData: Login = {
-        username: this.loginForm.get('username')?.value,
+        email: this.loginForm.get('email')?.value,
         password: this.loginForm.get('password')?.value
       };
 
