@@ -23,7 +23,7 @@ public class AuthService(MyDbContext dbContext, IConfiguration configuration) : 
     {
         var user = await dbContext
             .Users
-            .FirstOrDefaultAsync(u => u.UserName == model.Username);
+            .FirstOrDefaultAsync(u => u.Email == model.Email);
 
         if (user == null)
             return new LoginResponseDTO { Result = LoginRes.UserNameIncorrect };
@@ -58,6 +58,7 @@ public class AuthService(MyDbContext dbContext, IConfiguration configuration) : 
 
         var newUser = new User
         {
+            Email = model.Email,
             UserName = model.Username,
             Password = hashedPassword,
         };

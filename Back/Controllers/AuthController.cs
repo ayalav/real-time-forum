@@ -22,7 +22,7 @@ public class AuthController(IAuthService authService) : ControllerBase
             RegisterResult.UserExist => BadRequest("Username already exists."),
             RegisterResult.UserNameIncorrect => BadRequest("Username is required."),
             RegisterResult.PasswordIncorrect => BadRequest("Password is required."),
-            RegisterResult.Success => Ok("User registered successfully."),
+            RegisterResult.Success => Ok(result),
             _ => BadRequest("An error occurred.")
         };
     }
