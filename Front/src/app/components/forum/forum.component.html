@@ -10,11 +10,11 @@
   </div>
 
   <!-- Form to create a new post-->
-  @if (showPostForm){
+  @if (showPostForm){   
     <app-post-form 
       [postForm]="postForm" 
-      (formSubmit)="togglePostForm()" 
-      (cancel)="createPost()">
+      (submitPost)="createPost()" 
+      (cancel)="togglePostForm()">
     </app-post-form>
   }
 
