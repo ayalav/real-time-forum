@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -21,7 +21,7 @@ import { NotificationService } from '../../../services/notification.service';
   styleUrl: './comments.component.scss'
 })
 export class CommentsComponent {
-  @Input() postId: number = 0;
+  postId = input.required<number>();
   comments: Comment[] = [];
   commentForm: FormGroup;
 
@@ -49,7 +49,7 @@ export class CommentsComponent {
   }
 
   loadComments() {
-    this.postService.getComments(this.postId).subscribe(comments => {
+    this.postService.getComments(this.postId()).subscribe(comments => {
       this.comments = comments;
     });
   }
@@ -60,7 +60,7 @@ export class CommentsComponent {
         content: this.commentForm.value.content
       };
 
-      this.postService.addComment(this.postId, newComment).subscribe(
+      this.postService.addComment(this.postId(), newComment).subscribe(
         comment => {
           this.comments.push(comment);
           this.commentForm.reset();

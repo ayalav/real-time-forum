@@ -1,4 +1,4 @@
-import { Component, Input, output } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -20,18 +20,18 @@ import { MatButtonModule } from '@angular/material/button';
   styleUrl: './post-form.component.scss'
 })
 export class PostFormComponent {
-  @Input() postForm!: FormGroup;
+  postForm = input.required<FormGroup>();
   cancel = output<void>();
   submitPost = output<void>();
 
   constructor(private fb: FormBuilder) { }
 
   getContent(): FormControl {
-    return this.postForm.get('content') as FormControl;
+    return this.postForm().get('content') as FormControl;
   }
 
   createPost() {
-    if (this.postForm.valid) {
+    if (this.postForm().valid) {
       this.submitPost.emit();
     }
   }

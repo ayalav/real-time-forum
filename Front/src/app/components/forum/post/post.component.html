@@ -1,19 +1,19 @@
 <div class="post">
     <div class="post-header">
-      <h3>{{ post.title }}</h3>   
-      <span class="post-author">Posted by <strong>{{ post.userName }}</strong></span>
+      <h3>{{ post().title }}</h3>   
+      <span class="post-author">Posted by <strong>{{ post().userName }}</strong></span>
     </div>
-    <div class="post-content" [innerHTML]="post.content"></div>
+    <div class="post-content" [innerHTML]="post().content"></div>
 
     <!-- Button to toggle showing comments -->
     <button mat-button color="primary" (click)="toggleComments()">
-      {{ post.showComments ? 'Hide Comments' : 'Show Comments' }}
+      {{ post().showComments ? 'Hide Comments' : 'Show Comments' }}
     </button>   
 
     <!-- Comments section -->
-    @if (post.showComments){
+    @if (post().showComments){
     <div class="comments-section">
-      <app-comments [postId]="post.id"></app-comments>
+      <app-comments [postId]="post().id"></app-comments>
     </div>
     }
   </div>

@@ -1,8 +1,8 @@
-<form [formGroup]="postForm" class="post-form" (ngSubmit)="createPost()">
+<form [formGroup]="postForm()" class="post-form" (ngSubmit)="createPost()">
     <mat-form-field appearance="outline" class="full-width">
         <mat-label>Post Title</mat-label>
         <input matInput formControlName="title" placeholder="Enter post title" />
-        @if (postForm.get('title')?.hasError('required')){
+        @if (postForm().get('title')?.hasError('required')){
         <mat-error>Title is required</mat-error>
         }
     </mat-form-field>
@@ -11,7 +11,7 @@
 
     <!-- Button containers -->
     <div class="button-container">
-        <button mat-raised-button color="primary" type="submit" [disabled]="postForm.invalid">
+        <button mat-raised-button color="primary" type="submit" [disabled]="postForm().invalid">
             Submit Post
         </button>
         <button mat-button color="warn" type="button" (click)="onCancel()">

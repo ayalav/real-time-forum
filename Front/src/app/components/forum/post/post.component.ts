@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, input, Input } from '@angular/core';
 import { Post } from '../../../models/post';
 import { CommentsComponent } from '../../forum/comment/comments.component';
 import { MatButtonModule } from '@angular/material/button';
@@ -14,9 +14,10 @@ import { MatButtonModule } from '@angular/material/button';
   styleUrl: './post.component.scss'
 })
 export class PostComponent {
-  @Input() post!: Post; 
+  post = input.required<Post>();
 
   toggleComments() {
-    this.post.showComments = !this.post.showComments;
+    const currentPost = this.post(); 
+    currentPost.showComments = !currentPost.showComments;
   }
 }
